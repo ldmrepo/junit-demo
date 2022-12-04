@@ -1,5 +1,6 @@
 package com.example.junitdemo.domain;
 
+import com.example.junitdemo.web.dto.BookRespDto;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,5 +32,14 @@ public class Book {
     this.id = id;
     this.title = title;
     this.author = author;
+  }
+
+  public BookRespDto toDto() {
+    return BookRespDto
+      .builder()
+      .id(id)
+      .title(this.title)
+      .author(this.author)
+      .build();
   }
 }

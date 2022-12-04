@@ -8,7 +8,6 @@ import com.example.junitdemo.web.dto.BookSaveDto;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.management.RuntimeErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,9 +37,7 @@ public class BookService {
     return bookRepository
       .findAll()
       .stream()
-      .map(book -> {
-        return new BookRespDto().toDto(book);
-      })
+      .map(Book::toDto)
       .collect(Collectors.toList());
   }
 
@@ -48,7 +45,7 @@ public class BookService {
   public BookRespDto 책한건보기(Long id) {
     Optional<Book> op = bookRepository.findById(id);
     if (op.isPresent()) {
-      return new BookRespDto().toDto(op.get());
+      return op.get().toDto();
     } else {
       throw new RuntimeException("책을 찾을 수 없습니다.");
     }
@@ -64,12 +61,13 @@ public class BookService {
 
   // 5. 책수정
   @Transactional(rollbackFor = RuntimeException.class)
-  public void 책삭제(Long id, BookSaveDto dto) {
-    Optional<Book> bookPS = bookRepository.findById(id);
-    if (bookPS.isPresent()) {
-      Book book = bookPS.get();
-      book.setTitle(dto.getTitle());
-      book.setAuthor(dto.getAuthor());
+  public BookRespDto 책수정(Long id, BookSaveDto dto) {
+    Optional<Book> bookOP = bookRepository.findById(id);
+    if (bookOP.isPresent()) {
+      Book bookPS = bookOP.get();
+      bookPS.setTitle(dto.getTitle());
+      bookPS.setAuthor(dto.getAuthor());
+      return bookPS.toDto();
     } else {
       throw new RuntimeException("해당 책을 찾을 수 없습니다.");
     }
