@@ -83,7 +83,7 @@ public class BookServiceTest {
     Long id = 1L;
 
     // stub
-    Book book = new Book(id, "junit5", "홍길동");
+    Book book = new Book(id, "junit6", "홍길동");
     Optional<Book> bookOp = Optional.of(book);
 
     when(bookRepository.findById(1L)).thenReturn(bookOp);
